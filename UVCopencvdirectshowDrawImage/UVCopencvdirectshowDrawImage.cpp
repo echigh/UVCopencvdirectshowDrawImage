@@ -116,6 +116,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
+	UVCdevice = cam_count - 1;
 	if (!camera.OpenCamera(UVCdevice, true, 360, 240)) //不弹出属性选择窗口，用代码制定图像宽和高, 先true弹出属性框先配置一下YUV2,1280X720,后面再改为false
 	{
 		fprintf(stderr, "Can not open camera.\n");
@@ -451,7 +452,7 @@ void reverse_byte_order(float* a)
 DWORD WINAPI ThreadProc(LPVOID lpParam){
 
 	float* Depth = new float[180 * 240];
-	m_iTargetDistance = 500;
+	m_iTargetDistance = 400;
 	//IplImage *pFrame = NULL;
 	CString s;
 	while (1)
@@ -459,6 +460,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam){
 		//获取一帧
 		//MessageBox(NULL, (LPCWSTR)L"capturing", (LPCWSTR)L"imageSize", MB_DEFBUTTON2);
 		IplImage *pFrame = camera.QueryFrame();
+		//system("pause");
 		//MessageBox(NULL, (LPCWSTR)L"QueryFrame finished", (LPCWSTR)L"imageSize", MB_DEFBUTTON2);
 		cvFlip(pFrame, pFrame, 0);
 		Mat frame(360, 240, CV_16UC3, pFrame->imageData);
@@ -481,7 +483,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam){
 
 		pFrame = NULL;
 
-		Sleep(250); 
+		Sleep(50); 
 	}
 
 	return 0;

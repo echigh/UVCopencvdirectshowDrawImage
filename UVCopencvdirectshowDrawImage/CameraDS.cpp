@@ -362,10 +362,13 @@ IplImage* CCameraDS::QueryFrame()
 	long evCode;
 	long size = 0;
 
+	//system("pause");
 	m_pMediaControl->Run();
 	m_pMediaEvent->WaitForCompletion(INFINITE, &evCode);
  
 	m_pSampleGrabber->GetCurrentBuffer(&size, NULL);
+
+	//system("pause");
 
 	//if the buffer size changed
 	if (size != m_nBufferSize)
@@ -376,6 +379,7 @@ IplImage* CCameraDS::QueryFrame()
 		m_nBufferSize = size;
 		//m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_8U, 3);
 		m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_16U, 1);
+		//m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_16U, 2);
 		
 	}
 
