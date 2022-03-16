@@ -17,6 +17,7 @@
 #include <fstream>
 #include "CRC16Calc.h"
 #include <errno.h>
+#include <locale.h>
 
 #pragma comment(lib,"vfw32.lib")
 
@@ -59,6 +60,16 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	MSG msg;
 	HACCEL hAccelTable;
 	HWND hWnd = NULL;
+
+	/*console related*/
+	FILE* fpDebugOut = NULL;
+	FILE* fpDebugIn = NULL;
+	if (!AllocConsole()) MessageBox(NULL, _T("控制台生成失败。"), NULL, 0);
+	SetConsoleTitle(_T("Debug Window"));
+	_tfreopen_s(&fpDebugOut, _T("CONOUT$"), _T("w"), stdout);
+	_tfreopen_s(&fpDebugIn, _T("CONIN$"), _T("r"), stdin);
+	_tsetlocale(LC_ALL, _T("chs"));     //这是必要的，否则unicode模式下使用C库函数控制台输出不了中文 WriteConsole函数不受影响
+
 
 	// 初始化全局字符串
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -116,10 +127,11 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	UVCdevice = cam_count - 1;
+	cin >> UVCdevice;
+	//UVCdevice = cam_count - 1;
 	if (!camera.OpenCamera(UVCdevice, true, 360, 240)) //不弹出属性选择窗口，用代码制定图像宽和高, 先true弹出属性框先配置一下YUV2,1280X720,后面再改为false
 	{
-		fprintf(stderr, "Can not open camera.\n");
+		MessageBox(NULL, (LPCWSTR)L"Can not open camera.\n", (LPCWSTR)L"which camera cannot get", MB_DEFBUTTON2);
 		system("pause");
 		return -1;
 	}
@@ -132,6 +144,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		0,//creation option 创建线程后的线程状态 0表示立即执行
 		NULL);//thread identifier 线程id
 	
+	/*console related*/
+	fclose(fpDebugOut);
+	fclose(fpDebugIn);
+	FreeConsole();
 
 	// 主消息循环: 
 	while (GetMessage(&msg, NULL, 0, 0))
