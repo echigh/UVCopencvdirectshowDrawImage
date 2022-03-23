@@ -469,25 +469,21 @@ DWORD WINAPI ThreadProc(LPVOID lpParam){
 
 	float* Depth = new float[180 * 240];
 	m_iTargetDistance = 400;
-	//IplImage *pFrame = NULL;
 	CString s;
 	while (1)
 	{
 		//»ñÈ¡Ò»Ö¡
-		//MessageBox(NULL, (LPCWSTR)L"capturing", (LPCWSTR)L"imageSize", MB_DEFBUTTON2);
 		IplImage *pFrame = camera.QueryFrame();
 		//system("pause");
 		//MessageBox(NULL, (LPCWSTR)L"QueryFrame finished", (LPCWSTR)L"imageSize", MB_DEFBUTTON2);
 		cvFlip(pFrame, pFrame, 0);
-		Mat frame(360, 240, CV_16UC3, pFrame->imageData);
+		//Mat frame(360, 240, CV_16UC3, pFrame->imageData);
+		//Mat frame(1, 1, CV_8UC1, pFrame->imageData);
 
 		//s.Format(_T("size = %d.\n"), pFrame->imageSize);
 		//MessageBox(NULL, (LPCWSTR)s, (LPCWSTR)L"imageSize", MB_DEFBUTTON2);
 
-		for (int i = 0; i < 180 * 240; i++)
-		{
-			memcpy(&Depth[i], frame.data + 4 * i, sizeof(float));
-		}
+		memcpy(Depth, pFrame->imageData, 180 * 240 * sizeof(float));
 		write_csv("srcdepth1.csv", Depth, "");
 		for (int i = 0; i < 180 * 240; i++)
 		{
@@ -495,7 +491,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam){
 		}
 		write_csv("srcdepth2.csv", Depth, "");
 		DrawImage(Depth, 240, 180, (HWND)lpParam);
-		save_img(frame, pFrame);
+		//save_img(frame, pFrame);
 
 		pFrame = NULL;
 

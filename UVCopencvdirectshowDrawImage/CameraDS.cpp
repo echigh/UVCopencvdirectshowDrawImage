@@ -377,9 +377,9 @@ IplImage* CCameraDS::QueryFrame()
 			cvReleaseImage(&m_pFrame);
 
 		m_nBufferSize = size;
-		//m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_8U, 3);
+		//m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_8U, 1);
 		m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_16U, 1);
-		//m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_16U, 2);
+		//m_pFrame = cvCreateImage(cvSize(m_nWidth, m_nHeight), IPL_DEPTH_32F, 3);
 		
 	}
 
